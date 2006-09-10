@@ -1,0 +1,20 @@
+
+B. Beijing: 40°N, 116°E
+C. Cairo: 30°N, 31°E
+CT. Cape Town: 34°S, 18°E
+H. Hong Kong: 22°N, 114°E
+J. Jakarta: 6°S, 106°E
+LA. Los Angeles: 34°N, 118°W
+LI. Lima: 12°S, 77°W
+LO. London: 51°N, 0°W
+MC. Mexico City: 19°N, 99°W
+MO. Moscow: 55°N, 37°E
+MU. Mumbai: 19°N, 72°E
+NA. Nairobi: 1°S, 37°E
+NO. New Orleans: 30°N, 90°W
+NY. New York: 40°N, 74°W
+R, Rio de Janeiro: 23°S, 43°W
+SE. Seattle: 47°N, 122°W
+SY. Sydney: 34°S, 151°E
+TK. Tokyo: 35°N, 139°E
+T. Toronto: 43°N, 79°W
