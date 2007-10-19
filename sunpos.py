@@ -28,76 +28,93 @@ rads = pi / 180
 #   FNday only works between 1901 to 2099 - see Meeus chapter 7
 #
 def FNday (y, m, d, h):
- return= 367 * y - 7 * (y + (m + 9) \ 12) \ 4 + 275 * m \ 9 + d - 730531.5 + h / 24
+ return 367 * y - 7 * (y + (m + 9) \ 12) \ 4 + 275 * m \ 9 + d - 730531.5 + h / 24
+
+# Some compatibility assignments to match the basic names. Not sure about SQR.
+def signum(i):
+ # Python doesn't have a built-in signum ?!??!
+ if(i < 0): return -1;
+ elif(i > 0): return 1;
+ else: return i;
+ATN=math.atan
+SQR=math.sqrt
+ABS=math.fabs
+SGN=signum
+INT=int
 #
 #   define some arc cos and arc sin functions and a modified inverse
 #   tangent function
 #
-DEF FNacos (x)
+def FNacos (x):
     s = SQR(1 - x * x)
-    FNacos = ATN(s / x)
-END DEF
-DEF FNasin (x)
+    return ATN(s / x)
+
+def FNasin (x):
     c = SQR(1 - x * x)
-    FNasin = ATN(x / c)
-END DEF
+    return ATN(x / c)
+
 #
 #   the atn2 function below returns an angle in the range 0 to two pi
 #   depending on the signs of x and y.
 #
-DEF FNatn2 (y, x)
+def FNatn2 (y, x):
     a = ATN(y / x)
-    IF x < 0 THEN a = a + pi
-    IF (y < 0) AND (x > 0) THEN a = a + tpi
-    FNatn2 = a
-END DEF
+    if x < 0:
+     a = a + pi
+    if (y < 0) and (x > 0):
+     a = a + tpi
+    return a
+
+
 #
 #   the function below returns the true integer part,
 #   even for negative numbers
 #
-DEF FNipart (x) = SGN(x) * INT(ABS(x))
+def FNipart (x):
+ return SGN(x) * INT(ABS(x))
 #
 #   the function below returns an angle in the range
 #   0 to two pi
 #
-DEF FNrange (x)
+def FNrange (x):
     b = x / tpi
     a = tpi * (b - FNipart(b))
-    IF a < 0 THEN a = tpi + a
-    FNrange = a
-END DEF
+    if a < 0:
+      a = tpi + a
+    return a
+
 #
 #   Find the ecliptic longitude of the Sun
 #
-DEF FNsun (d)
-#
-#   mean longitude of the Sun
-#
-L = FNrange(280.461 * rads + .9856474# * rads * d)
-#
-#   mean anomaly of the Sun
-#
-g = FNrange(357.528 * rads + .9856003# * rads * d)
-#
-#   Ecliptic longitude of the Sun
-#
-FNsun = FNrange(L + 1.915 * rads * SIN(g) + .02 * rads * SIN(2 * g))
-#
-#   Ecliptic latitude is assumed to be zero by definition
-#
-END DEF
-#
+def FNsun (d)
+  #
+  #   mean longitude of the Sun
+  #
+  L = FNrange(280.461 * rads + .9856474# * rads * d)
+  #
+  #   mean anomaly of the Sun
+  #
+  g = FNrange(357.528 * rads + .9856003# * rads * d)
+  #
+  #   Ecliptic longitude of the Sun
+  #
+  return FNrange(L + 1.915 * rads * SIN(g) + .02 * rads * SIN(2 * g))
+  #
+  #   Ecliptic latitude is assumed to be zero by definition
+  #
 #
 #
-CLS
+#
+INPUT = raw_input
 #
 #    get the date and time from the user
 #
-INPUT "  year  : ", y
-INPUT "  month : ", m
-INPUT "  day   : ", day
-INPUT "hour UT : ", h
-INPUT " minute : ", mins
+y= string.atoi(INPUT( "  year  : "))
+m= string.atoi(INPUT( "  month : "))
+day= string.atoi(INPUT( "  day   : "))
+h= string.atoi(INPUT( "hour UT : "))
+mins= string.atoi(INPUT( " minute : "))
+
 h = h + mins / 60
 d = FNday(y, m, day, h)
 #
