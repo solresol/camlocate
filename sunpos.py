@@ -121,7 +121,7 @@ d = FNday(y, m, day, h)
 #   Use FNsun to find the ecliptic longitude of the
 #   Sun
 #
-lambda = FNsun(d)
+lamtha = FNsun(d)
 #
 #   Obliquity of the ecliptic
 #
@@ -129,8 +129,8 @@ obliq = 23.439 * rads - .0000004# * rads * d
 #
 #   Find the RA and DEC of the Sun
 #
-alpha = FNatn2(COS(obliq) * SIN(lambda), COS(lambda))
-delta = FNasin(SIN(obliq) * SIN(lambda))
+alpha = FNatn2(COS(obliq) * SIN(lamtha), COS(lamtha))
+delta = FNasin(SIN(obliq) * SIN(lamtha))
 #
 #   Find the Earth - Sun distance
 #
@@ -147,7 +147,7 @@ print "Position of Sun"
 print "==============="
 print
 print "     days : %5.5f" % d
-print "longitude : %5.2f" % (lambda * degs)
+print "longitude : %5.2f" % (lamtha * degs)
 print "       RA : %5.3f" % (alpha * degs / 15.0)
 print "      DEC : %5.2f" % (delta * degs)
 print " distance : %5.5f" % (r)
