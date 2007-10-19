@@ -1,0 +1,320 @@
+
+                              Position of the Sun
+
+   [[1]Root]
+
+Contents
+
+     * [2]Overview
+     * [3]The formulas with typical values
+     * [4]QBASIC program
+     * [5]Accuracy over 100 years
+
+Overview
+
+   [[6]Top]
+
+   This page is based on page C24 of the 1996 Astronomical Almanac which
+   provides a method for finding the position of the Sun in the sky to an
+   accuracy of 0.01 degree between the years 1950 and 2050.
+
+   The formulas are based on an elliptical orbit for the Earth, using
+   mean orbital elements and a two term approximation for the 'equation
+   of centre'. There is also an approximate allowance made for the change
+   in obliquity of the ecliptic with time, needed when converting to
+   right ascension and declination. The positions are thus apparent
+   positions, they are referred to the mean ecliptic and equinox of date.
+
+   I compared the positions found using this low precision formula with
+   values referred to the mean ecliptic and equinox of date from a more
+   accurate program. The results (for the whole 1950 to 2050 range) are
+   summarised below. I found the series to be accurate within 3 seconds
+   of RA and 15 arc seconds in declination.
+
+The formulas with typical values
+
+   [[7]Top]
+
+   Below, I give the formulas from page C24 of the Astronomical Almanac,
+   with modified notation. I have given the formulas together with
+   numerical values for a specific day. The calculations were done on a
+   normal scientific calculator with 8 figure accuracy.
+Position of the Sun at 11:00 UT on 1997 August 7th
+
+1. Find the days before J2000.0 (d) from the [8]table
+
+   d = 11/24 + 212 + 7 - 1096.5 = -877.04167
+
+2. Find the Mean Longitude (L) of the Sun
+
+   L = 280.461 + 0.9856474 * d
+     = -583.99284 + 720
+    (add multiples of 360 to bring in range 0 to 360)
+     = 136.00716
+
+3. Find the Mean anomaly (g) of the Sun
+
+   g = 357.528 + 0.9856003 * d
+     = -506.88453 + 720
+     = 213.11547
+
+4. Find the ecliptic longitude (lambda) of the sun
+
+   lambda = L + 1.915 * sin(g) + 0.020 * sin(2*g)
+          = 134.97925
+
+   (note that the sin(g) and sin(2*g) terms constitute an
+    approximation to the 'equation of centre' for the orbit
+    of the Sun)
+
+   beta = 0 (by definition as the Sun's orbit defines the
+             ecliptic plane. This results in a simplification
+             of the formulas below)
+
+5. Find the obliquity of the ecliptic plane (epsilon)
+
+   epsilon = 23.439 - 0.0000004 * d
+           = 23.439351
+
+6. Find the Right Ascension (alpha) and Declination (delta) of
+   the Sun
+
+   Y = cos(epsilon) * sin(lambda)
+   X = cos(lambda)
+
+   a = arctan(Y/X)
+
+   If X < 0 then alpha = a + 180
+   If Y < 0 and X > 0 then alpha = a + 360
+   else alpha = a
+
+   Y =  0.6489924
+   X = -0.7068507
+
+   a = -42.556485
+   alpha = -42.556485 + 180 = 137.44352 (degrees)
+
+   delta = arcsin(sin(epsilon)*sin(lambda))
+         = 16.342193 degrees
+
+Final result
+
+   Right ascension is usually given in hours of time, and both
+   figures need to be rounded to a sensible number of decimal
+   places.
+
+
+   alpha =   9.163 hrs      or   9h 09m 46s
+   delta = +16.34 degrees   or +16d 20' 32"
+
+   The Interactive Computer Ephemeris gives
+
+   alpha =   9h 09m 45.347s and
+   delta = +16d 20' 30.89"
+
+QBASIC program
+
+   [[9]Top]
+'*********************************************************
+'   This program will calculate the position of the Sun
+'   using a low precision method found on page C24 of the
+'   1996 Astronomical Almanac.
+'
+'   The method is good to 0.01 degrees in the sky over the
+'   period 1950 to 2050.
+'
+'   QBASIC program by Keith Burnett (kburnett@geocity.com)
+'
+'
+'   Work in double precision and define some constants
+'
+DEFDBL A-Z
+pr1$ = "\         \#####.##"
+pr2$ = "\         \#####.#####"
+pr3$ = "\         \#####.###"
+pi = 4 * ATN(1)
+tpi = 2 * pi
+twopi = tpi
+degs = 180 / pi
+rads = pi / 180
+'
+'   Get the days to J2000
+'   h is UT in decimal hours
+'   FNday only works between 1901 to 2099 - see Meeus chapter 7
+'
+DEF FNday (y, m, d, h) = 367 * y - 7 * (y + (m + 9) \ 12) \ 4 + 275 * m \ 9 + d
+ - 730531.5 + h / 24
+'
+'   define some arc cos and arc sin functions and a modified inverse
+'   tangent function
+'
+DEF FNacos (x)
+    s = SQR(1 - x * x)
+    FNacos = ATN(s / x)
+END DEF
+DEF FNasin (x)
+    c = SQR(1 - x * x)
+    FNasin = ATN(x / c)
+END DEF
+'
+'   the atn2 function below returns an angle in the range 0 to two pi
+'   depending on the signs of x and y.
+'
+DEF FNatn2 (y, x)
+    a = ATN(y / x)
+    IF x < 0 THEN a = a + pi
+    IF (y < 0) AND (x > 0) THEN a = a + tpi
+    FNatn2 = a
+END DEF
+'
+'   the function below returns the true integer part,
+'   even for negative numbers
+'
+DEF FNipart (x) = SGN(x) * INT(ABS(x))
+'
+'   the function below returns an angle in the range
+'   0 to two pi
+'
+DEF FNrange (x)
+    b = x / tpi
+    a = tpi * (b - FNipart(b))
+    IF a < 0 THEN a = tpi + a
+    FNrange = a
+END DEF
+'
+'   Find the ecliptic longitude of the Sun
+'
+DEF FNsun (d)
+'
+'   mean longitude of the Sun
+'
+L = FNrange(280.461 * rads + .9856474# * rads * d)
+'
+'   mean anomaly of the Sun
+'
+g = FNrange(357.528 * rads + .9856003# * rads * d)
+'
+'   Ecliptic longitude of the Sun
+'
+FNsun = FNrange(L + 1.915 * rads * SIN(g) + .02 * rads * SIN(2 * g))
+'
+'   Ecliptic latitude is assumed to be zero by definition
+'
+END DEF
+'
+'
+'
+CLS
+'
+'    get the date and time from the user
+'
+INPUT "  year  : ", y
+INPUT "  month : ", m
+INPUT "  day   : ", day
+INPUT "hour UT : ", h
+INPUT " minute : ", mins
+h = h + mins / 60
+d = FNday(y, m, day, h)
+'
+'   Use FNsun to find the ecliptic longitude of the
+'   Sun
+'
+lambda = FNsun(d)
+'
+'   Obliquity of the ecliptic
+'
+obliq = 23.439 * rads - .0000004# * rads * d
+'
+'   Find the RA and DEC of the Sun
+'
+alpha = FNatn2(COS(obliq) * SIN(lambda), COS(lambda))
+delta = FNasin(SIN(obliq) * SIN(lambda))
+'
+'   Find the Earth - Sun distance
+'
+r = 1.00014 - .01671 * COS(g) - .00014 * COS(2 * g)
+'
+'   Find the Equation of Time
+'
+equation = (L - alpha) * degs * 4
+'
+'   print results in decimal form
+'
+PRINT
+PRINT "Position of Sun"
+PRINT "==============="
+PRINT
+PRINT USING pr2$; "     days : "; d
+PRINT USING pr1$; "longitude : "; lambda * degs
+PRINT USING pr3$; "       RA : "; alpha * degs / 15
+PRINT USING pr1$; "      DEC : "; delta * degs
+PRINT USING pr2$; " distance : "; r
+PRINT USING pr1$; "eq time   : "; equation
+END
+'*********************************************************
+
+   Below is the output from the program when run for 11:00 UT on 1997
+   August 7.
+  year  : 1997
+  month : 8
+  day   : 7
+hour UT : 11
+ minute : 0
+
+Position of Sun
+===============
+
+     days : -877.04167
+longitude :  134.98
+       RA :    9.163
+      DEC :   16.34
+ distance :    1.01408
+eq time   :   -5.75
+
+Accuracy over 100 year period
+
+   [[10]Top]
+
+   I modified the QBASIC program above to produce a file of positions for
+   days from -20,000 to +20,000 - a 106 year period centred on J2000.0.
+   The RA and DEC figures were rounded to 4 places of decimals in this
+   file. I used Planeph to generate a similar file of positions for the
+   Sun, referred to the mean ecliptic and equinox of date. I then loaded
+   both files into a spreadsheet, and found the errors in seconds of time
+   (RA) and arcseconds (DEC). The maximum and minimum errors are shown in
+   the table below for various ranges of time about J2000.0
+Sun error
+                    RA sec    DEC arcsec
+Max within 3 year     0.6        8.9
+Min within 3 year    -2.1       -8.2
+Max within 10 year    0.6       10.9
+Min within 10 year   -2.6      -12.5
+Max within 50 year    1.0       16.8
+Min within 50 year   -2.9      -16.1
+
+Error = C24 low precision method - Planeph
+
+Note: Planeph was set to give output referred to mean
+      ecliptic and equinox of date.
+
+   [[11]Root]
+
+   Last Modified 7th August 1997
+   Keith Burnett
+
+
+    keith@xylem.demon.co.uk
+
+References
+
+   1. file://localhost/home/gregb/index.html
+   2. file://localhost/home/gregb/sun.html#twig01
+   3. file://localhost/home/gregb/sun.html#twig02
+   4. file://localhost/home/gregb/sun.html#twig03
+   5. file://localhost/home/gregb/sun.html#twig04
+   6. file://localhost/home/gregb/sun.html#twig00
+   7. file://localhost/home/gregb/sun.html#twig00
+   8. file://localhost/home/gregb/days.txt
+   9. file://localhost/home/gregb/sun.html#twig00
+  10. file://localhost/home/gregb/sun.html#twig00
+  11. file://localhost/home/gregb/index.html
