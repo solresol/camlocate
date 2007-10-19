@@ -49,10 +49,12 @@ COS=math.cos
 #   tangent function
 #
 def FNacos (x):
+    global s
     s = SQR(1 - x * x)
     return ATN(s / x)
 
 def FNasin (x):
+    global c
     c = SQR(1 - x * x)
     return ATN(x / c)
 
@@ -61,6 +63,7 @@ def FNasin (x):
 #   depending on the signs of x and y.
 #
 def FNatn2 (y, x):
+    global a
     a = ATN(y / x)
     if x < 0:
      a = a + pi
@@ -80,6 +83,7 @@ def FNipart (x):
 #   0 to two pi
 #
 def FNrange (x):
+    global b
     b = x / tpi
     a = tpi * (b - FNipart(b))
     if a < 0:
@@ -90,6 +94,8 @@ def FNrange (x):
 #   Find the ecliptic longitude of the Sun
 #
 def FNsun (d):
+  global L
+  global g
   #
   #   mean longitude of the Sun
   #
