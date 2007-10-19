@@ -8,15 +8,16 @@
 #   period 1950 to 2050.
 #
 #   QBASIC program by Keith Burnett (kburnett@geocity.com)
-#
+#   Ported to python by Greg Baker (gregb@ifost.org.au)
 #
 #   Work in double precision and define some constants
 #
+
+import math
+
 #DEFDBL A-Z
-pr1$ = "\         \#####.##"
-pr2$ = "\         \#####.#####"
-pr3$ = "\         \#####.###"
-pi = 4 * ATN(1)
+pi = math.pi
+#pi = 4 * ATN(1)
 tpi = 2 * pi
 twopi = tpi
 degs = 180 / pi
@@ -26,8 +27,8 @@ rads = pi / 180
 #   h is UT in decimal hours
 #   FNday only works between 1901 to 2099 - see Meeus chapter 7
 #
-DEF FNday (y, m, d, h) = 367 * y - 7 * (y + (m + 9) \ 12) \ 4 + 275 * m \ 9 + d
- - 730531.5 + h / 24
+def FNday (y, m, d, h):
+ return= 367 * y - 7 * (y + (m + 9) \ 12) \ 4 + 275 * m \ 9 + d - 730531.5 + h / 24
 #
 #   define some arc cos and arc sin functions and a modified inverse
 #   tangent function
@@ -124,15 +125,14 @@ equation = (L - alpha) * degs * 4
 #
 #   print results in decimal form
 #
-PRINT
-PRINT "Position of Sun"
-PRINT "==============="
-PRINT
-PRINT USING pr2$; "     days : "; d
-PRINT USING pr1$; "longitude : "; lambda * degs
-PRINT USING pr3$; "       RA : "; alpha * degs / 15
-PRINT USING pr1$; "      DEC : "; delta * degs
-PRINT USING pr2$; " distance : "; r
-PRINT USING pr1$; "eq time   : "; equation
-END
+print
+print "Position of Sun"
+print "==============="
+print
+print "     days : %5.5f" % d
+print "longitude : %5.2f" % (lambda * degs)
+print "       RA : %5.3f" % (alpha * degs / 15.0)
+print "      DEC : %5.2f" % (delta * degs)
+print " distance : %5.5f" % (r)
+print "eq time   : %5.2f" % (equation)
 #*********************************************************
