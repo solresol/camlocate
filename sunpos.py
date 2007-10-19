@@ -28,7 +28,7 @@ rads = pi / 180
 #   FNday only works between 1901 to 2099 - see Meeus chapter 7
 #
 def FNday (y, m, d, h):
- return (367 * y - 7 * (y + (m + 9) / 12) / 4 + 275 * m / 9 + d - 730531.5 + h / 24)
+ return (367 * y - 7 * (y + (m + 9) / 12) / 4 + 275 * m / 9 + d - 730531.5 + h / 24.0)
 
 # Some compatibility assignments to match the basic names. Not sure about SQR.
 def signum(i):
