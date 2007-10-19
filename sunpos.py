@@ -12,7 +12,7 @@
 #
 #   Work in double precision and define some constants
 #
-
+import string
 import math
 
 #DEFDBL A-Z
@@ -41,6 +41,9 @@ SQR=math.sqrt
 ABS=math.fabs
 SGN=signum
 INT=int
+SIN=math.sin
+COS=math.cos
+
 #
 #   define some arc cos and arc sin functions and a modified inverse
 #   tangent function
