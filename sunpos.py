@@ -28,7 +28,7 @@ rads = pi / 180
 #   FNday only works between 1901 to 2099 - see Meeus chapter 7
 #
 def FNday (y, m, d, h):
- return 367 * y - 7 * (y + (m + 9) \ 12) \ 4 + 275 * m \ 9 + d - 730531.5 + h / 24
+ return (367 * y - 7 * (y + (m + 9) / 12) / 4 + 275 * m / 9 + d - 730531.5 + h / 24)
 
 # Some compatibility assignments to match the basic names. Not sure about SQR.
 def signum(i):
@@ -86,15 +86,15 @@ def FNrange (x):
 #
 #   Find the ecliptic longitude of the Sun
 #
-def FNsun (d)
+def FNsun (d):
   #
   #   mean longitude of the Sun
   #
-  L = FNrange(280.461 * rads + .9856474# * rads * d)
+  L = FNrange(280.461 * rads + 0.9856474 * rads * d)
   #
   #   mean anomaly of the Sun
   #
-  g = FNrange(357.528 * rads + .9856003# * rads * d)
+  g = FNrange(357.528 * rads + 0.9856003 * rads * d)
   #
   #   Ecliptic longitude of the Sun
   #
