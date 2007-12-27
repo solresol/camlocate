@@ -118,13 +118,17 @@ INPUT = raw_input
 #
 #    get the date and time from the user
 #
-y= string.atoi(INPUT( "  year  : "))
-m= string.atoi(INPUT( "  month : "))
-day= string.atoi(INPUT( "  day   : "))
-h= string.atoi(INPUT( "hour UT : "))
-mins= string.atoi(INPUT( " minute : "))
+import sys
+(y,m,day) = sys.argv[1].split('-')
+(h,mins) = sys.argv[2].split(':')
 
-h = h + mins / 60
+y= string.atoi(y)
+m= string.atoi(m)
+day= string.atoi(day)
+h= string.atoi(h)
+mins= string.atof(mins)
+
+h = h + mins / 60.0
 d = FNday(y, m, day, h)
 #
 #   Use FNsun to find the ecliptic longitude of the
